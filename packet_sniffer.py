@@ -60,14 +60,6 @@ def process_sniffed_packet(packet):
         print(f"Fragment Offset: {ip_layer.frag}")
         print("-" * 40)
     
-    if packet.haslayer(scapy.TCP):
-        tcp_layer = packet.getlayer(scapy.TCP)
-        print(f"[+] TCP Packet >>>>>")
-        print(f"Source Port: {tcp_layer.sport}")
-        print(f"Destination Port: {tcp_layer.dport}")
-        print(f"Flags: {get_tcp_flags(tcp_layer)}")
-        print("-" * 40)
-    
     if packet.haslayer(http.HTTPRequest):
         print("[+] HTTP REQUEST >>>>>")
         url_extractor(packet)
@@ -81,26 +73,6 @@ def process_sniffed_packet(packet):
     elif packet.haslayer(scapy.Raw):
         print("[+] Potential HTTPS traffic detected >>>>>")
         raw_https_request(packet)
-
-def get_tcp_flags(tcp_layer):
-    flags = []
-    if tcp_layer.flags & scapy.TCP.flags.SYN:
-        flags.append('SYN')
-    if tcp_layer.flags & scapy.TCP.flags.ACK:
-        flags.append('ACK')
-    if tcp_layer.flags & scapy.TCP.flags.FIN:
-        flags.append('FIN')
-    if tcp_layer.flags & scapy.TCP.flags.RST:
-        flags.append('RST')
-    if tcp_layer.flags & scapy.TCP.flags.PSH:
-        flags.append('PSH')
-    if tcp_layer.flags & scapy.TCP.flags.URG:
-        flags.append('URG')
-    if tcp_layer.flags & scapy.TCP.flags.ECE:
-        flags.append('ECE')
-    if tcp_layer.flags & scapy.TCP.flags.CWR:
-        flags.append('CWR')
-    return ", ".join(flags)
 
 def get_login_info(packet):
     if packet.haslayer(scapy.Raw):
@@ -138,7 +110,26 @@ def raw_http_request(packet):
         print("\n[+] Quitting Program...")
     print("---------------------------------------------------------")
 
+def print_ascii_art():
+    ascii_art = """
+
+$$$$$$$\   $$$$$$\   $$$$$$\  $$\   $$\ $$$$$$$$\ $$$$$$$$\        $$$$$$\  $$\   $$\ $$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$$\ $$$$$$$\  
+$$  __$$\ $$  __$$\ $$  __$$\ $$ | $$  |$$  _____|\__$$  __|      $$  __$$\ $$$\  $$ |\_$$  _|$$  _____|$$  _____|$$  _____|$$  __$$\ 
+$$ |  $$ |$$ /  $$ |$$ /  \__|$$ |$$  / $$ |         $$ |         $$ /  \__|$$$$\ $$ |  $$ |  $$ |      $$ |      $$ |      $$ |  $$ |
+$$$$$$$  |$$$$$$$$ |$$ |      $$$$$  /  $$$$$\       $$ |         \$$$$$$\  $$ $$\$$ |  $$ |  $$$$$\    $$$$$\    $$$$$\    $$$$$$$  |
+$$  ____/ $$  __$$ |$$ |      $$  $$<   $$  __|      $$ |          \____$$\ $$ \$$$$ |  $$ |  $$  __|   $$  __|   $$  __|   $$  __$$< 
+$$ |      $$ |  $$ |$$ |  $$\ $$ |\$$\  $$ |         $$ |         $$\   $$ |$$ |\$$$ |  $$ |  $$ |      $$ |      $$ |      $$ |  $$ |
+$$ |      $$ |  $$ |\$$$$$$  |$$ | \$$\ $$$$$$$$\    $$ |         \$$$$$$  |$$ | \$$ |$$$$$$\ $$ |      $$ |      $$$$$$$$\ $$ |  $$ |
+\__|      \__|  \__| \______/ \__|  \__|\________|   \__|          \______/ \__|  \__|\______|\__|      \__|      \________|\__|  \__|
+                                                                                                                                      
+                                                                                                                   BY LOKESHWAR-BH4G47                                                                                                                             
+                                                                                                                                      
+                                                   
+    """
+    print(f"{Fore.CYAN}{ascii_art}{Style.RESET_ALL}")
+
 def main_sniff():
+    print_ascii_art()
     print(f"{Fore.BLUE}Welcome To Packet Sniffer{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}[***] Please Start Arp Spoofer Before Using this Module [***] {Style.RESET_ALL}")
     try:
